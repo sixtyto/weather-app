@@ -1,3 +1,5 @@
+@import "top";
+@import "bottom";
 * {
   box-sizing: border-box;
 }
@@ -20,12 +22,5 @@ body,
     border-radius: 10px;
     display: flex;
     flex-direction: column;
-    .top-section {
-      flex-grow: 1;
-      text-align: center;
-    }
-    .bottom-section {
-      flex-grow: 1;
-    }
   }
 }
