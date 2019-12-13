@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import TopSection from "./components/top.js";
+import BottomSection from "./components/bottom.js";
 // import logo from "./logo.svg";
 import "./sass/app.scss";
 
@@ -7,8 +9,8 @@ class App extends Component {
     return (
       <div className="app-container">
         <div className="main-container">
-          <div className="top-section">TOP</div>
-          <div className="bottom-section">BOTTOM</div>
+          <TopSection />
+          <BottomSection />
         </div>
       </div>
     );
