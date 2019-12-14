@@ -1,7 +1,9 @@
+
 import React from "react";
 import TopSection from "./components/top.js";
 import BottomSection from "./components/bottom.js";
 import axios from "axios";
+
 import "./sass/app.scss";
 
 const weatherKEY = "94ef15104d494a45b00be420b599d834";
