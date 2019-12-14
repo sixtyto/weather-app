@@ -6,7 +6,7 @@ import axios from "axios";
 import "./sass/app.scss";
 
 const weatherKEY = "8080d91906bcedbc99609a0f51c2f040";
-const URL = `http://api.openweathermap.org/data/2.5/weather?&APPID=${weatherKEY}`;
+const URL = `https://api.openweathermap.org/data/2.5/weather?&APPID=${weatherKEY}`;
 
 class App extends React.Component {
   constructor(props) {
@@ -30,7 +30,7 @@ class App extends React.Component {
         this.setState({
           temperature: Math.floor(data.main.temp - 273.15),
           text: data.weather.description,
-          iconURL: `http://openweathermap.org/img/wn/${data.weather[0].icon}.png`,
+          iconURL: `https://openweathermap.org/img/wn/${data.weather[0].icon}.png`,
           isLoading: false
         });
       })
