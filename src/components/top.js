@@ -1,23 +1,85 @@
 import React from "react";
-import SunImg from "../images/sun.jpg";
+import { Manager, Reference, Popper } from "react-popper";
 
 export default class TopSection extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      isButtonClicked: false,
+      cityName: ""
+    };
   }
+
+  handleLocationInputChange = e => {
+    this.setState({
+      cityName: e.target.value
+    });
+  };
+
+  handleSelectCity = e => {
+    e.preventDefault();
+    const { cityName } = this.state;
+    const { eventEmitter } = this.props;
+    eventEmitter.emit("updateWeather", cityName);
+    this.setState(prevState => ({
+      isButtonClicked: !prevState.isButtonClicked
+    }));
+  };
+
+  handleLocationChange = e => {
+    e.preventDefault();
+    this.setState(prevState => ({
+      isButtonClicked: !prevState.isButtonClicked
+    }));
+  };
+
   render() {
-    const { cityName, temperature, text, iconURL } = this.props;
+    const { isButtonClicked } = this.state;
     return (
       <div className="top-section">
         <div className="top-section__title">Weather@</div>
-        <Weather
-          cityName={cityName}
-          temperature={temperature}
-          text={text}
-          iconURL={iconURL}
-        />
-        <button className="top-section__button">Change location</button>
+        <Weather {...this.props} />
+
+        <Manager>
+          <Reference>
+            {({ ref }) => (
+              <button
+                onClick={this.handleLocationChange}
+                ref={ref}
+                className="top-section__button"
+              >
+                Change location
+              </button>
+            )}
+          </Reference>
+          <Popper placement="top">
+            {({ ref, style, placement, arrowProps }) =>
+              isButtonClicked && (
+                <div
+                  className="top-section__button-input"
+                  ref={ref}
+                  style={style}
+                  data-placement={placement}
+                >
+                  <label htmlFor="locationName">Location name:</label>
+                  <input
+                    id="locationName"
+                    type="text"
+                    placeholder="city name"
+                    onChange={this.handleLocationInputChange}
+                  ></input>
+                  <button
+                    onClick={this.handleSelectCity}
+                    className="top-section__button-confirm"
+                  >
+                    Select
+                  </button>
+                  <div ref={arrowProps.ref} style={arrowProps.style} />
+                </div>
+              )
+            }
+          </Popper>
+        </Manager>
       </div>
     );
   }
