@@ -1,4 +1,3 @@
-
 import React from "react";
 import TopSection from "./components/top.js";
 import BottomSection from "./components/bottom.js";
@@ -6,32 +5,48 @@ import axios from "axios";
 
 import "./sass/app.scss";
 
-const weatherKEY = "94ef15104d494a45b00be420b599d834";
-const URL = `http://api.weatherstack.com/current?access_key=${weatherKEY}`;
+const weatherKEY = "8080d91906bcedbc99609a0f51c2f040";
+const URL = `http://api.openweathermap.org/data/2.5/weather?&APPID=${weatherKEY}`;
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      cityName: "London",
-      forecastDays: 5,
-      isLoading: true
+      cityName: "Reda",
+      daysForForecast: 5,
+      isLoading: true,
+      forecastdays: ""
     };
   }
 
   updateWeather = () => {
-    const { cityName, forecastDays } = this.state;
+    const { cityName } = this.state;
     axios
-      .get(`${URL}&query=${cityName}&days=${forecastDays}`)
+      .get(`${URL}&q=${cityName}`)
       .then(res => {
         return res.data;
       })
       .then(data => {
         this.setState({
-          temperature: data.current.temperature,
-          text: data.current.weather_descriptions[0],
-          iconURL: data.current.weather_icons[0],
+          temperature: Math.floor(data.main.temp - 273.15),
+          text: data.weather.description,
+          iconURL: `http://openweathermap.org/img/wn/${data.weather[0].icon}.png`,
           isLoading: false
+        });
+      })
+      .catch(err => {
+        if (err) console.log("cannot fetch API", err);
+      });
+    axios
+      .get(
+        `https://api.openweathermap.org/data/2.5/forecast?&appid=${weatherKEY}&q=${cityName}`
+      )
+      .then(res => {
+        return res.data;
+      })
+      .then(data => {
+        this.setState({
+          forecastdays: data.list
         });
       })
       .catch(err => {
@@ -43,14 +58,23 @@ class App extends React.Component {
     const { eventEmitter } = this.props;
     this.updateWeather();
     eventEmitter.on("updateWeather", data => {
-      this.setState({
-        cityName: data
-      });
-      this.updateWeather();
+      this.setState(
+        {
+          cityName: data
+        },
+        () => this.updateWeather()
+      );
     });
   }
   render() {
-    const { isLoading, cityName, temperature, text, iconURL } = this.state;
+    const {
+      isLoading,
+      cityName,
+      temperature,
+      text,
+      iconURL,
+      forecastdays
+    } = this.state;
     return (
       <div className="app-container">
         <div className="main-container">
@@ -64,7 +88,7 @@ class App extends React.Component {
                 iconURL={iconURL}
                 eventEmitter={this.props.eventEmitter}
               />
-              <BottomSection />
+              <BottomSection forecastdays={forecastdays} />
             </>
           )}
         </div>
