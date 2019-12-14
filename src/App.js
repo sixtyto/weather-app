@@ -1,15 +1,49 @@
 import React, { Component } from "react";
 import TopSection from "./components/top.js";
 import BottomSection from "./components/bottom.js";
-// import logo from "./logo.svg";
+import axios from "axios";
 import "./sass/app.scss";
 
+const weatherKEY = "94ef15104d494a45b00be420b599d834";
+const URL = `http://api.weatherstack.com/current?access_key=${weatherKEY}`;
+
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      cityName: "London",
+      forecastDays: 5
+    };
+  }
+  componentDidMount() {
+    const { cityName, forecastDays } = this.state;
+    axios
+      .get(`${URL}&query=${cityName}&days=${forecastDays}`)
+      .then(res => {
+        return res.data;
+      })
+      .then(data => {
+        this.setState({
+          temperature: data.current.temperature,
+          text: data.current.weather_descriptions[0],
+          iconURL: data.current.weather_icons[0]
+        });
+      })
+      .catch(err => {
+        if (err) console.log("cannot fetch API", err);
+      });
+  }
   render() {
+    const { cityName, temperature, text, iconURL } = this.state;
     return (
       <div className="app-container">
         <div className="main-container">
-          <TopSection />
+          <TopSection
+            cityName={cityName}
+            temperature={temperature}
+            text={text}
+            iconURL={iconURL}
+          />
           <BottomSection />
         </div>
       </div>

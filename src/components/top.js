@@ -7,13 +7,18 @@ export default class TopSection extends React.Component {
     this.state = {};
   }
   render() {
+    const { cityName, temperature, text, iconURL } = this.props;
     return (
-      <>
-        <div className="top-section">
-          <div className="top-section__title">Weather@</div>
-          <Weather />
-        </div>
-      </>
+      <div className="top-section">
+        <div className="top-section__title">Weather@</div>
+        <Weather
+          cityName={cityName}
+          temperature={temperature}
+          text={text}
+          iconURL={iconURL}
+        />
+        <button className="top-section__button">Change location</button>
+      </div>
     );
   }
 }
@@ -24,21 +29,20 @@ class Weather extends React.Component {
     this.state = {};
   }
   render() {
+    const { cityName, temperature, text, iconURL } = this.props;
     return (
-      <>
-        <div className="top-section__weather">
-          <div className="top-section__weather-header">location</div>
-          <div className="top-section__weather-container">
-            <div className="top-section__weather-container-image">
-              <img src={SunImg} alt="sun" />
-            </div>
-            <div className="top-section__weather-container-temperature">
-              Temperature
-            </div>
+      <div className="top-section__weather">
+        <div className="top-section__weather-header">{cityName}</div>
+        <div className="top-section__weather-container">
+          <div className="top-section__weather-container-image">
+            <img src={iconURL} alt="sun" />
           </div>
-          <div className="top-section__weather-footer">Sunny</div>
+          <div className="top-section__weather-container-temperature">
+            {temperature}°C
+          </div>
         </div>
-      </>
+        <div className="top-section__weather-footer">{text}</div>
+      </div>
     );
   }
 }
